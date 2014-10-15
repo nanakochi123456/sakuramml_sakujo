@@ -1,0 +1,1580 @@
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//
+// サクジョ！～私立桜ヶ浦学園～
+//
+// 作詞：桜庭 未那
+// 作曲：佐藤 豪 (staffごう)
+// アーティスト：桜庭 未那
+// 著作者：NHN Japan Corp. (http://www.nhncorp.jp/)
+// MMLかき：ななこっち★（ゆったかぱぷぅ）
+//
+// コレクションキング
+// http://casual.hangame.co.jp/collectionking/
+//
+// お知らせ
+// http://casual.hangame.co.jp/collectionking/notice.nhn?m=read&view=&bbsid=305&bbstype=notice&gameid=COLLEKING_NOTICE&page=1&docid=1871784&direction=0&orgDocid=0&titletxt=&contenttxt=&doccatecode=
+//
+// 歌謡タイピング劇場
+// http://casual.hangame.co.jp/typing/
+//
+// 出来た音源のダウンロード
+// http://m.nanakochi.daiba.cx/
+//
+// 奨励音源
+// TiMidiTy
+// TWM
+// Roland Edirol Hyper Canvas & Edirol VSC-MP1
+// MA7 ATS-MA7-SMAF v1.6.2 (音素片はソースに記載してあるメール添付を参照）
+//
+// 確認音源
+// TWM2 (音量バランスの崩れ、タムの音量不足以外問題なし）
+// TiMitiTy - 差分を作らないと無理そうです。
+// ミッドラジオプレイヤー（最新）：動作確認程度のことしかできません。汗
+// Windowsの音源 or Roland VSC単体：動作確認程度のことしかできません。汗
+//
+// 奨励環境
+// オーディオ＋TiMidiTy
+// 携帯電話本体（MA7版のみ）
+// オーディオ＋TWM（とりあえず聴けるレベル）
+//
+// 転載：更に２次利用をしない無料サイト、メール転送等個人間転送のみ可
+// 　　　アフィリエイトを除く有料サイト、アフィリエイトを含むポイントサイトや
+// 　　　お小遣いサイトへ誘導しているサイトへの転載を禁じます。
+// 　　　販売等も禁じます。
+// 編曲：禁止（改変も禁止）
+//
+// 変換環境
+// Windows XP + Cakewalk Soner 4.04
+// Windows 7 + ATS-MA7-SMAF v1.6.2
+//
+// 備考
+// ライセンスはフリーではありませんが、上記の転載要件を満たせば転載は可能です。
+//
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//
+// 音源設定
+//
+Int TiMidiTy=1
+Int MA7=0
+//
+// 全曲再生は１
+Int ALL=1
+//
+Int MELODY=0
+Int MELODYONLY=0
+//
+Int BACK=1
+//
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+Tempo 180
+Expression.Frequency(2);
+//Modulation.Frequency(16);
+
+曲名={"サクジョ！～私立桜ヶ浦学園～"};
+作者={"NHN Japan Corp."};
+
+Function Slowly(Mes){
+	Int TT = Tempo;
+	Int T = Tempo / Mes ;
+//	T = T / 8;
+	T = 6
+	For(Int I=1; I <= Mes; I++){
+		Sub{ [4
+			TT = TT - T;
+			Tempo = TT; r4
+		]}
+	}
+}
+
+Function SelVoice(midi,ma7) {
+	IF(MA7==0) {
+		音色(midi,0,0);
+	}
+	IF(MA7<>0) { 
+		IF(ma7 == 0) {
+			音色(midi,0,0);
+		} ELSE {
+			音色(ma7,124,2)
+		}
+	}
+}
+
+Int PTime=-1000
+Function PON {
+	Int BAK
+	Int V=!4
+	IF(PTime + V > Time) {
+		BAK=Time
+		Time=Time + V
+		y64,127
+		Time=BAK
+	} ELSE {
+		y64,127
+	}
+}
+
+Function POFF {
+	y64,0
+	PTime=Time
+}
+
+Function VBON(V) {
+	IF(MA7==0) {
+		IF(V!=2) {
+			M.onNoteWaveEx(0,127,!48)
+		}
+	} ELSE {
+		M(127)
+	}
+}
+
+Function VBOFF {
+	M(0)
+}
+
+Function Dy(D,value) {
+	Int Base = 127 - (D % 128)
+	Int Dynamic = D / 128
+	Int V
+	Int VB
+
+	V = value - Base
+	V = 127 - V
+	V = V * 10 * Dynamic
+	V = V / 1000
+	V = 127 - V
+	IF(V<0) {
+		V=0
+	}
+	V = V - 10
+	IF(V>127) {
+		V=127
+	}
+	Result = V
+}
+
+Function EX(value1,value2,value3,value4,value5,value6,value7,value8,value9,value10,value11,value12) {
+	Int	NowTime;
+	Int	D=30*128+100
+
+	IF(MA7 == 0) {
+		IF(value9<>0) {
+			Expression.onNoteWave(Dy(D,value1),Dy(D,value2),value3,Dy(D,value4),Dy(D,value5),value6,Dy(D,value7),Dy(D,value8),value9);
+		} ELSE {
+			IF(value6<>0) {
+				Expression.onNoteWave(Dy(D,value1),Dy(D,value2),value3,Dy(D,value4),Dy(D,value5),value6);
+			} ELSE {
+				IF(value2<>0) {
+					Expression.onNoteWave(Dy(D,value1),Dy(D,value2),value3);
+				} ELSE {
+					IF(value2==0) {
+						Expression(Dy(D,value1))
+					}
+				}
+			}
+		}
+	}
+}
+
+#INTRO_CHORD0={
+	l4
+	rrrl16ef#g#a
+}
+
+#INTRO_CHORD1={
+	l8
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#e4.<
+	ag#rarbr>c#
+	e4.d#d#2<
+
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#e4.<
+	ag#rarara#
+	brb2.
+}
+
+#CHORD0={
+	l8
+	'<e1^1g#1^1b1^1>'
+	'<e1^1g#1^1>c#1^1'
+	'<e1^1a1^1>c#1^1'
+	'<f#1a1>c#1'
+	'<g#4.>e4.''<f#>d#''<f#2>d#2'
+	'<e1^1g#1^1b1^1>'
+	'<e1^1g#1^1>c#1^1'
+	'<e1^1a1^1>c#1^1'
+	<ag#rarara#
+	brbrr2
+	>
+}
+
+#CHORD6={
+	<ag#rarara#
+	brbrr2
+	>
+	<ag#rarara#
+	brbrr2
+	>
+
+	'<e1^1g#1^1b1^1>'
+	'<e1^1g#1^1>c#1^1'
+	'<e1^1a1^1>c#1^1'
+	'<f#8a8>c#8'rr'<f#8a8>c#8'rr '<f#8a8>c#8'r
+	r'<f#8a8>c#8'rr '<f#8a8>c#8'r4.
+	'<f#8a8>d#8'rr'<f#8a8>d#8'rr '<f#8a8>d#8'r
+	r'<f#8a8>d#8'rr '<f#8a8>d#8'r4.
+
+	'<g#b>e'rr'<f#a>d'rr'<ea>c#'r
+	r'<eg>c'rr '<f#a>d'r'<f#a>d'r
+	rr'<g#b>e''<g#b>e'
+
+}
+
+#CHORD1={
+	l8
+	'<g#1b1>e1'
+	'<g#1b1>d#1'
+	'<a2.>c#2.e2.'r'<b>d#f#'
+	r'<b>d#f#'r'<b>d#f#'r'<b4.>d#4.f#4.'
+
+	'<g#1b1>e1'
+	'<g#1b1>d#1'
+	'<a2.>c#2.e2.'r'<b>d#f#'
+	r'<b>d#f#'r'<b>d#f#'r'<b4.>d#4.f#4.'
+
+	'<a1>c#1e1'
+	'<g#4b4>e4'r'<g#b>e'r'<g#4.b4.>e4.'
+	'<a1>c#1f#1'
+	r'<b>d#f#'r'<b>d#f#'r'<b4.>d#4.f#4.'
+
+	'<a1>c#1e1'
+	'<g#4.b4.>d#4.''<g#8^2>c#8^2e8^2'
+	'<f#4a4>c#4''<g#4b4>d#4''<a4>c#4e4''<a#4>c#4f#4'
+	'<b1>d#1f#1'
+
+#
+	l8
+	'<g#1b1>e1'
+	'<g#1b1>d#1'
+	'<a2.>c#2.e2.'r'<b>d#f#'
+	r'<b>d#f#'r'<b>d#f#'r'<b4.>d#4.f#4.'
+
+	'<g#1b1>e1'
+	'<g#1b1>d#1'
+	'<a2.>c#2.e2.'r'<b>d#f#'
+	r'<b>d#f#'r'<b>d#f#'r'<b4.>d#4.f#4.'
+
+	'<a1>c#1e1'
+	'<g#4b4>e4'r'<g#b>e'r'<g#4.b4.>e4.'
+	'<a1>c#1f#1'
+	r'<b>d#f#'r'<b>d#f#'r'<b4.>d#4.f#4.'
+
+	'<a1>c#1e1'
+	'<g#4.b4.>d#4.''<g#8^2>c#8^2e8^2'
+	'<f#4a4>c#4''<g#4b4>d#4''<a4>c#4e4''<a#4>c#4f#4'
+	'<b1^4>d#1^4f#1^4'r2.
+}
+
+#CHORD2={
+	l8
+	'g#1.b1.'
+	r'd#f#''eg#''f#a'
+	'g#1^4.b1^4.'
+	'g#4>e4<''f#4>d#4<'
+	'e8^1b8^1'
+	'e1a1'
+	'f#8a8''e4g#4''e4a4''e4a4''e8b8'
+	'g#4.>e4.<''f#>d#<''f#4>d#4<'e16f#16g#16a16
+
+	'g#1.b1.'
+	r'd#f#''eg#''f#a'
+	'g#1^4.b1^4.'
+	'g#4>e4<''f#4>d#4<'
+	'e8^1b8^1'
+	'e1a1'
+	'e8a8''e8g#8'r'e8a8'r'e8a8'r'e8a#8'
+	'f#8b8'r'f#8b8'r rrrr //f#ed#e
+}
+
+#CHORD3={
+	'c#4a4''c#4a4'Sub{c#4.}'a8''f#4''d#4.g#4.'
+	'd#4g#4' Sub{d#4.}a8b4 'g#8^2^8b8^2^8'
+	'd#4g#4''g#2>d#2<'
+	'g#2>c#2<' 'e8^2^8a8^2^8'
+
+	'e4g#4' 'd#8^2f#8^2'
+	'd#8g#8''d#8a8'r8'e8^1^4b8^1^4'
+	r8'eg#' 'eb''g#>d#<'r'a8^2^8>e8^2^8<'
+
+	'g#4>d#4<''b4.>f#4.<'
+	'b4>e4<' 'g#>d#<''f#4>c#4<''d#8^2^8b8^2^8'
+	'd#8''d#8g#8''d#8b8'
+	'g#4.>d#4.<''e2>e2<'l8f#&
+
+	f#ef#g#& g#f#g#a& af#g#a#& a#g#a#b &
+	b1^2^4
+	b16>d#16f#16a16<
+	'b2.^8>b2.^8<''b4>d#4f#4b4<'
+	'b>d#f#b<''b>d#f#b<'r r2
+
+}
+
+#CHORD4={
+	'e2.^8a2.^8>c#2.^8<'
+	'f#1a1>d#1<'
+	'g#1b1>d#1<'
+	'g#1>c#1<'
+
+	'e1a1>c#1<'
+	'f#1a1>d#1<'
+	'g#1^2.b1^2.>e1^2.<'r4
+
+	'e1a1>c#1<'
+	'f#1a1>d#1<'
+	'g#1b1>d#1<'
+	'g#2b2>d#2<'
+	'g#2b2>e2<'
+
+	'f#2a2>c#2<'
+	'g#2b2>d#2<'
+	'f#2a2>c#2<'
+	'f#2a#2>c#2<'
+
+	'f#1^1^1b1^1^1>d#1^1^1<'
+	'f#4b4>d#4<''f#8b8>d#8<''f#4b4>d#4<'r2
+}
+
+#CHORD5={
+	'e8a8''e8g#8'r'e8a8'r'e8a8'r'e8a#8'
+	'f#8b8'r'f#8b8'r rrrr //f#ed#e
+
+	'e8a8''e8g#8'r'e8a8'r'e8a8'r'e8a#8'
+	'f#8b8'r'f#8b8'r rrrr //f#ed#e
+
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#er<b &
+	b4>erd#e4.<
+
+	'c#a'g#e'c#a' g#e'c#a'g#
+	e'c#a'g#e 'c#a'g#eg#
+	'd#b'f#d#'d#b' f#d#'d#b'f#
+	d#'d#b'f#d# 'd#b''d#b''e>c#<''f#>d#<'
+
+	'g#.>e.<'r16r'f#.>d.<' r16r'e.>c#.<'r16
+	r'e4.>c4.<' 'f#.>d.<'r16'f#.>d.<'r16
+	rr'g#>Slowly(1)e<''g#>e<'
+}
+#CHORD51={
+	rr<<'g#1>e1'
+}
+
+#STRINGS1={
+	l8
+	[6 r1]
+	'a2.>c#2.<'r
+	Sub{'a2>c#2<'}
+	>e4d#e<
+	'b8^2>d#8^2f#8^2<'
+
+	'a2.>c#2.<''a4>c#4<'
+	'g#4.b4.'Sub{'g#8^2b8^2'}r4.>e4<
+	'f#2.a2.>c#2.<'Sub{'f#4a4>c#4<'}r8>e8<
+	Sub{'f#4.b4.'}>d#c#r<'f#b>d#<'r'f#4.b4.>d#4.<'
+
+	'a2.>c#2.e2.<''a4>c#4g#4<'
+	'g#4.b4.>f#4.<''>c#8^2e8^2g#8^2<'
+	'a4>c#4<''b4>d#4<''>c#4e4<''>d#4f#4<'
+	'>d#4.f#4.b4.<''>d#f#a<''>d#2f#2a2<'
+}
+
+#STRINGS2={
+	'a2.>c#2.<''a4>c#4<'
+	'g#4.b4.' 'g#8^2b8^2'
+	'f#2.a2.'Sub{'f#4a4'}b>c#<
+	Sub{'f#4.b4.'}>d#c#r<'b>d#f#<'r'b4.>d#4.f#4.<'
+
+	'a2.>c#2.e2.<''a4>c#4g#4<'
+	'g#4.b4.>f#4.<''>c#8^2e8^2g#8^2<'
+	'a4>c#4<''b4>d#4<''>c#4e4<''>d#4f#4<'
+	>'eg#''f#a'r'f#4.b4.' f#8g#16a16
+	'd#4f#4b4'r2.
+}
+
+#SYNTH1={
+	l8
+	'<e4.g#4.b4.>''<e8^2g#8^2b8^2>'
+	'<d#4.g#4.b4.>''<d#8^2g#8^2b8^2>'
+	'<e2.a2.>c#2.'r'<a>c#e'
+	r'<a>c#d#'r'<a>c#e'r'<b4.>d#4.f#4.'
+
+	'<e4.g#4.b4.>''<e8^2g#8^2>c#8^2'
+	'<g#4.b4.>d#4.''<g#8^2b8^2>d#8^2f#8^2'
+	'<e2a2>c#2'r'<ea>c#'rSub{'<a2>c#2<'}>e
+	&ed#e '<b8^2>d#8^2f#8^2<'
+
+	[4 r1]
+
+	r2.'a4>c#4g#4<'
+	'g#4.b4.>f#4.<''>c#8^2e8^2g#8^2<'
+	'a4>c#4<''b4>d#4<''>c#4e4<''>d#4f#4<'
+	>'eg#''f#a'r'f#4.b4.' f#8g#16a16
+	'd#4f#4b4'r2.
+}
+
+#INTRO_BASS1={
+	l8
+	e4e4 ee4e &
+	eee4 ee4>c# &
+	c#c#c#4 c#c#4c# &
+	c#c#c#4 c#c#4<a &
+	aaa4 aa4a &
+	aaa4 aa4. &
+	f#4g#4 a4a#4
+	b4.b b2
+
+	e4e4 ee4e &
+	eee4 ee4>c# &
+	c#c#c#4 c#c#4c# &
+	c#c#c#4 c#c#4<a &
+	aaa4 aa4a &
+	aaa4 aa4. &
+	f#4g#4 a4a#4
+	b8r8b2.
+}
+
+#BASS1={
+	l8
+	e4.e4e4e
+	g#4g#g#4g#4g#
+	a4aa4a4b&
+	b&b4b4b4.
+
+	e4.e4e4e
+	g#4g#g#4g#4g#
+	a4aa4a4b&
+	b&b4b4b4.
+
+	a4.a4a4a
+	g#4.g#4g#4g#
+	f#4.f#4f#4f#
+	b4.b4b4b
+
+	a4.a4a4a
+	g#4.>c#4c#c#4<
+	f#4g#4a4a#4
+	b4.bb2
+
+	e4.e4e4e
+	g#4g#g#4g#4g#
+	a4aa4a4b&
+	b&b4b4b4.
+
+	e4.e4e4e
+	g#4g#g#4g#4g#
+	a4aa4a4b&
+	b&b4b4b4.
+
+	a4.a4a4a
+	g#4.g#4g#4g#
+	f#4.f#4f#4f#
+	b4.b4b4b
+
+	a4.a4a4a
+	g#4.>c#4c#c#4<
+	f#4g#4a4a#4
+	b4.bb2&
+	b4r2.
+}
+
+#BASS2={
+	l4
+	[4 e]
+	[4 e]
+	>
+	[4 c#]
+	[4 c#]
+	<
+	[4 a]
+	[4 a]
+
+	f#g#aa#
+	l8b4.b bbbb
+//	b4>c#4d#4<b4
+
+	l4
+	[4 e]
+	[4 e]
+	>
+	[4 c#]
+	[4 c#]
+	<
+	[4 a]
+	[2 a] l8aa4a
+
+	l8
+	f#f#r arara#
+	brb4r2
+
+}
+
+#BASS3={
+	l4
+	aaaa8b8&
+	bbbb8g#8&
+	g#g#g#g#8>c#8&
+	c#c#c#c#8<a8&
+	aaaa8b8&
+	bbbb8>e8&
+	[8 e8]
+	[7 e8] <a8&
+	aaaa
+	aaaa8g#8&
+	g#g#g#g#>
+	c#4.c#2<f#8&
+	f#4.g#8 &g#4.a8&
+	a4.a#8& a#4.b8&
+	l8
+	bbb4 bbbb&
+	bbb4 bbbb&
+	bbb4 bbbb&
+	bbb4r2
+}
+
+#BASS4={
+	l4
+	[4 e]
+	[4 e]
+	>
+	[4 c#]
+	[4 c#]
+	<
+	[4 a]
+	[4 a]
+
+	f#g#aa#
+	l8b4.b bbbb
+//	b4>c#4d#4<b4
+
+	l4
+	[4 e]
+	[4 e]
+	>
+	[4 c#]
+	[4 c#]
+	<
+	[4 a]
+	[4 a]
+
+	l8
+	f#f#r arara#
+	brb4r2
+
+	l8
+	f#f#r arara#
+	brb4r2
+
+	l8
+	f#f#r arara#
+	brb4r2
+
+	e4e4 ee4e &
+	eee4 ee4>c# &
+	c#c#c#4 c#c#4c# &
+	c#c#c#4 c#c#4<a &
+	aaa4 aa4a &
+	aaa4 aa4. &
+
+	f#f#rf# rf#rf#
+	f#f#rf# rf#rf#
+	bbrb rbrb
+	bbrb rbrb>
+	errd rr c#r
+	rc&cr drdr
+	rree rr<e4&
+	e1
+}
+#INTRO_GUITAR0={
+	rrrl16ef#g#a
+}
+
+#INTRO_GUITAR1={
+	rrrl16ef#g#a
+	l8
+	b1^4^4 >d#8e8r<
+	b8^1^4^4 g#8a8r
+	b8^2.re &  e1 &
+	ag#rarbr>c#<
+	g#4.f#f#2
+
+	b1^4^4 >d#8e8r<
+	b8^1^4^4 g#8a8r
+	b8^2.>re &  e1 &
+	ag#rarara#
+	brb2.
+
+}
+
+#END_GUITAR1={
+	rrrl16ef#g#a
+	l8
+	b1^4r4 >d#8e8r<b &
+	b1^4r4 >d#8e8r b &
+	b2.^8 e8^1
+}
+
+#INTRO_G1={
+	l8
+	'eg#b''eg#b''eg#b''eg#b' 'eg#b''e4g#4b4''e4g#4b4'
+	'eg#b''eg#b''eg#b' 'eg#b''e4g#4b4''e4g#4>c#4<'
+	'eg#>c#<''eg#>c#<''eg#>c#<' 'eg#>c#<''e4g#4>c#4<''e4g#4>c#4<'
+	'eg#>c#<''eg#>c#<''eg#>c#<' 'eg#>c#<''e4g#4>c#4<''e4a4>c#4<'
+	'ea>c#<''ea>c#<''ea>c#<' 'ea>c#<''e4a4>c#4<''e4a4>c#4<'
+	'ea>c#<''ea>c#<''ea>c#<' 'ea>c#<''e4.a4.>c#4.<'
+	ag#rarbr>c#<
+	'g#4.>e4.<''f#>d#<''f#2>d#2<'
+
+	'eg#b''eg#b''eg#b''eg#b' 'eg#b''e4g#4b4''e4g#4b4'
+	'eg#b''eg#b''eg#b' 'eg#b''e4g#4b4''e4g#4>c#4<'
+	'eg#>c#<''eg#>c#<''eg#>c#<' 'eg#>c#<''e4g#4>c#4<''e4g#4>c#4<'
+	'eg#>c#<''eg#>c#<''eg#>c#<' 'eg#>c#<''e4g#4>c#4<''e4a4>c#4<'
+	'ea>c#<''ea>c#<''ea>c#<' 'ea>c#<''e4a4>c#4<''e4a4>c#4<'
+	'ea>c#<''ea>c#<''ea>c#<' 'ea>c#<''e4.a4.>c#4.<'
+	ag#rarara#
+	brb2.
+}
+
+#G1={
+	l8
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'd#g#b''d#g#b''d#g#b''d#4g#4#b4''d#4g#4b4''d#g#b'
+	'ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''e4a4>c#4<''e4a4>c#4<'
+	'#d4f#4b4''e4a4>c#4<''e4a4>c#4<''f#4.b4.>d#4.<'
+
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'd#g#b''d#g#b''d#g#b''d#4g#4#b4''d#4g#4b4''d#g#b'
+	'ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''e4a4>c#4<''a2>c#2e2'
+	'b8^2>d#8^2f#8^2<'<
+
+	'ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''e4.a4.>c#4.<'
+	'eg#b''eg#b''eg#b''e4g#4b4''e4.g#4.b4.'
+	'f#a>c#<''f#a>c#<''f#a>c#<''f#4a4>c#4<''f#4.a4.>c#4.<'
+	'f#b>d#<''f#b>d#<''f#b>d#<''f#4b4>d#4<''f#4.b4.>d#4.<'
+
+	'a>c#e<''a>c#e<''a>c#e<''a4>c#4e4<''a4.>c#4.e4.<'
+	'f#4.b4.>d#4.<''g#8^2>c#8^2e8^2<'
+	'e1a1>c#1<'
+	'g#4.b4.>e4.<''f#b>d#<''f#2b2>d#2<'
+
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'd#g#b''d#g#b''d#g#b''d#4g#4#b4''d#4g#4b4''d#g#b'
+	'ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''e4a4>c#4<''e4a4>c#4<'
+	'#d4f#4b4''e4a4>c#4<''e4a4>c#4<''f#4.b4.>d#4.<'
+
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'd#g#b''d#g#b''d#g#b''d#4g#4#b4''d#4g#4b4''d#g#b'
+	'ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''e4a4>c#4<''a2>c#2e2'
+	'b8^2>d#8^2f#8^2<'<
+
+	'ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''e4.a4.>c#4.<'
+	'eg#b''eg#b''eg#b''e4g#4b4''e4.g#4.b4.'
+	'f#a>c#<''f#a>c#<''f#a>c#<''f#4a4>c#4<''f#4.a4.>c#4.<'
+	'f#b>d#<''f#b>d#<''f#b>d#<''f#4b4>d#4<''f#4.b4.>d#4.<'
+
+	'a>c#e<''a>c#e<''a>c#e<''a4>c#4e4<''a4.>c#4.e4.<'
+	'f#4.b4.>d#4.<''g#8^2>c#8^2e8^2<'
+	'f#4a4>c#4<''g#4b4>d#4<''e4a4>c#4<''e4a4>c#4<'
+	'f#4.b4.>d#4.<''f#8^2b8^2>d#8^2<'
+	'f#4b4>d#4<'r2.
+}
+
+#G2={
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'c#g#>c#<''c#g#>c#<''c#g#>c#<''c#4g#4>c#4<''c#4g#4>c#4<''c#g#>c#<'
+	'c#g#>c#<''c#g#>c#<''c#g#>c#<''c#4g#4>c#4<''c#4g#4>c#4<''c#g#>c#<'
+
+	'c#a>c#<''c#a>c#<''c#a>c#<''c#4a4>c#4<''c#4a4>c#4<''c#a>c#<'
+	'c#a>c#<''c#a>c#<''c#a>c#<''c#4a4>c#4<''c#4a4>c#4<''c#a>c#<'
+	'c#a>c#<''c#a>c#<''c#a>c#<''c#4a4>c#4<''c#4a4>c#4<''c#a>c#<'
+	'e4.b4.''d#b''d#2b2'
+
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'eg#b''eg#b''eg#b''e4g#4b4''e4g#4b4''eg#b'
+	'c#g#>c#<''c#g#>c#<''c#g#>c#<''c#4g#4>c#4<''c#4g#4>c#4<''c#g#>c#<'
+	'c#g#>c#<''c#g#>c#<''c#g#>c#<''c#4g#4>c#4<''c#4g#4>c#4<''c#g#>c#<'
+
+	'c#a>c#<''c#a>c#<''c#a>c#<''c#4a4>c#4<''c#4a4>c#4<''c#a>c#<'
+	'c#a>c#<''c#a>c#<''c#a>c#<''c#4a4>c#4<''c#4a4>c#4<''c#a>c#<'
+	'c#a>c#<''c#4g#4>c#4<''c#4a4>c#4<''c#4a#4>c#4<''c#a#>c#<'
+	'd#4f#b4''d#4f#b4' f#8e8d#8e8
+}
+
+#G3={
+	'ea>c#<''ea>c#<''ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''f#4#b4>d#4<'
+	'f#b>d#<''f#b>d#<''f#b>d#<''f#b>d#<''f#4b4>d#4<''g#4b4>d#4<'
+	'g#b>d#<''g#b>d#<''g#b>d#<''g#b>d#<''g#4b4>d#4<''g#4>c#4<'
+	'g#>c#<''g#>c#<''g#>c#<''g#>c#<''g#4>c#4<''e4a4>c#4<'
+
+	'ea>c#<''ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''f#4#b4>d#4<'
+	'f#b>d#<''f#b>d#<''f#b>d#<''f#b>d#<''f#4b4>d#4<''g#4b4>e4<'
+	'g#b>e<''g#b>e<''g#b>e<''g#b>e<''g#4b4>e4<''g#4b4>e4<'
+	'g#b>e<''g#b>e<''g#b>e<''g#b>e<''g#4b4>e4<''e4a4>c#4<'
+
+	'ea>c#<''ea>c#<''ea>c#<''ea>c#<''e4a4>c#4<''f#4a4>d#4<'
+	'f#a>d#<''f#a>d#<''f#a>d#<''f#a>d#<''f#4a4>d#4<''g#4b4>d#4<'
+	'g#b>d#<''g#b>d#<''g#b>d#<''g#b>d#<''g#4b4>d#4<''g#2b2>d#2<'
+	'g#2>c#2e2<''f#2>f#2<'
+
+	'g#2>g#2<''a2>a2<'
+	'a#2>a#2<''f#4b4>d#4<'
+
+	'f#b>d#<''f#b>d#<''f#b>d#<''f#b>d#<''f#4b4>d#4<''f#4b4>d#4<'
+	'f#b>d#<''f#b>d#<''f#b>d#<''f#b>d#<''f#4b4>d#4<''f#4b4>d#4<'
+	'f#b>d#<''f#b>d#<''f#b>d#<''f#b>d#<''f#4b4>d#4<''f#4b4>d#4<'
+	'f#b>d#<''f#4b4>d#4<'r2
+
+}
+
+#G4={
+	'c#a>c#<''c#4g#4>c#4<''c#4a4>c#4<''c#4a#4>c#4<''c#a#>c#<'
+	'd#4f#b4''d#4f#b4' f#8e8d#8e8
+
+	'c#a>c#<''c#4g#4>c#4<''c#4a4>c#4<''c#4a#4>c#4<''c#a#>c#<'
+	'd#4f#b4''d#4f#b4' f#8e8d#8e8
+}
+
+#MERODY1={
+	l8
+	r2.r<b>
+	e4ee& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& a>c#& c#e &
+	ed#& d#e& ef#& f#4
+
+	e4d#e& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& aa>c# e &
+	ed# ef#& f#4.r
+
+	<a2.>e4
+	<b4.>e&e4.r
+	f#4c#4c#4e4
+	d#8c#4<b &b2>
+	
+	<a2.>e4
+	<b4b>e& e4.r
+	c#4d#4e4f#4
+	g#4.f# f#2
+
+	e4d#e& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& a>c#& c#e &
+	ed#& d#e& ef#& f#4
+
+	e4d#e& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& a>c#& c#e &
+	ed# ef#& f#4.r
+
+	<a2.>e4
+	<b4.>e& e4.r
+	f#4c#4c#4e4
+	d#8c#4<b &b2>
+
+	<a2.>e4
+	<b4>f#e& e4.r
+	c#4d#4e4f#4
+	g#a& ab& b2
+	r1
+
+}
+
+#MERODY2={
+	l8
+	b4a4g#4a4
+	b4.e& e4.<b>
+	bb aa g#g# aa
+	bb& be& e4.<b>
+
+	bb aa g#g# ab>
+	c#4 <g#f#& f#e& ec#
+	ag#& g#a& aa& ab
+	g#4.f#& f#2
+
+	b4 aa g#g# aa
+	b4.e& e4.e
+	bb aa g#4 aa
+	bb& be& e4.<b>
+
+	bb aa g#g# ab>
+ 	c#4 <g#f#& f#e& ec#
+	ag# ra ra& ra#
+	IF(ALL==1) {
+		brbr f#ed#e &
+		e1^1
+	} ELSE {
+		brbr f#ed#e &
+	}
+}
+
+#MERODY3={
+	l8
+	r2.r<b>
+	e4d#e& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& a>c#& c#e &
+	ed#& d#e& ef#& f#4
+
+	e4d#e& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& a>c#& c#e &
+	ed# ef#& f#4.r
+
+	<a2.>e4
+	<b4.>e&e4.r
+	f#4c#4c#4e4
+	d#8c#4<b &b2>
+	
+	<a2.>e4
+	<b4b>e& e4.r
+	c#4d#4e4f#4
+	g#4.f# f#4.<b>
+
+	e4d#e& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& a>c#& c#e &
+	ed#& d#e& ef#& f#4
+
+	e4d#e& ee& ef#
+	g#4d#d#& d#<b& bg#
+	a4g#a& a>c#& c#e &
+	ed# ef#& f#4.r
+
+	<a2.>e4
+	<b4.>e& e4.r
+	f#4c#4c#4e4
+	d#8c#4<b &b2>
+
+	<a2.>e4
+	<b4>f#e& e4.r
+	c#4d#4e4f#4
+	g#a& ab& b2
+	r1
+}
+
+#MERODY4={
+	l8
+	bbaag#g#aa
+	b4.e& e4.e
+	bb aa g#g# aa
+	bb& be& e4.<b>
+
+	bb aa g#g# ab>
+	c#4 <g#f#& f#e& ec#
+	ag#& g#a& aa& ab
+	g#4.f#& f#4.<b>
+
+	b4 aa g#g# aa
+	b4.e& e4.e
+	bb aa g#4 aa
+	bb& be& e4.<b>
+
+	bb aa g#g# ab>
+	c#4 <g#f#& f#e& ec#
+	ag# ra ra ra#
+//	brbr f#ed#e &
+//	e1^1
+	IF(ALL==1) {
+		brbr f#ed#e &
+		e1^1
+	} ELSE {
+		brbr f#ed#e
+	}
+}
+
+#MERODY5={
+	l8
+	bbaag#g#aa
+	b4.e& e4.e
+	bb aa g#g# aa
+	bb& be& e4.<b>
+
+	bb aa g#g# ab>
+	c#4 <g#f#& f#e& ec#
+	ag#& g#a& aa& ab
+	g#4.f#& f#4.<b>
+
+	b4 aa g#g# aa
+	b4.e& e4.e
+	bb aa g#4 aa
+	bb& be& e4.<b>
+
+	bb aa g#g# ab>
+	c#4 <g#f#& f#e& ec#
+	ag# ra ra ra#
+	brbr reg#g#
+	ag# ra ra ra#
+	brbr reg#g#
+	ag# ra ra ra#
+	brbr f#ed#e &
+	e1^1
+}
+
+IF(MELODY=1) {
+	トラック 1;
+		SelVoice(SawtoothLead,SawtoothLead)
+		v127
+		o5q90
+		EX(127,50,!8.)
+		VBON(2)
+		IF(MELODYONLY=0) {
+			IF(MA7==0) {
+				Sub {
+					o6q90
+					IF(ALL==1) {
+						IF(MELODYONLY=0) {
+							[16 r1]
+						}
+						#MERODY1
+						#MERODY2
+
+						[13 r1]
+						#MERODY1
+						#MERODY4
+				
+						[16 r1]
+						Sub {
+							#MERODY4
+						}
+						[16 r1]
+						#MERODY5
+					}
+					IF(ALL==0) {
+						#MERODY4
+					}
+				}
+			}
+		}
+		o5q90
+		IF(ALL==1) {
+			IF(MELODYONLY=0) {
+				[16 r1]
+			}
+			#MERODY1
+			#MERODY2
+		}
+
+		IF(ALL==1) {
+			[13 r1]
+			#MERODY1
+			#MERODY4
+
+			[16 r1]
+			Sub {
+				#MERODY4
+			}
+			[16 r1]
+			#MERODY5
+		}
+		IF(ALL==0) {
+			#MERODY4
+		}
+	}
+
+	IF(MELODYONLY=0){
+		トラック 2;
+			SelVoice(SquareLead,SquareLead)
+			v127
+			EX(127,50,!8.)
+			VBON(2)
+			IF(MA7==0) {
+				Sub {
+					o5q90
+					IF(ALL==1) {
+						[16 r1]
+						#MERODY1
+						#MERODY2
+						[13 r1]
+						#MERODY1
+						#MERODY2
+					
+						[16 r1]
+						Sub {
+							#MERODY4
+						}
+						[16 r1]
+						#MERODY5
+					}
+					IF(ALL==0) {
+						#MERODY4
+					}
+				}
+			}
+			o6q90
+			IF(ALL==1) {
+				[16 r1]
+				#MERODY1
+				#MERODY2
+			}
+
+			IF(ALL==1) {
+				[13 r1]
+				#MERODY1
+				#MERODY2
+
+				[16 r1]
+				Sub {
+					#MERODY4
+				}
+				[16 r1]
+				#MERODY5
+			}
+			IF(ALL==0) {
+				#MERODY4
+			}
+}
+IF(BACK=1) {
+	トラック 3;
+		v127
+		EX(127,100,!4)
+		SelVoice(SynthBrass1,SynthBrass1)
+		IF(ALL==1) {
+			IF(MA7==0) {
+				Sub {
+					o5q100
+					#INTRO_CHORD0
+					#INTRO_CHORD1
+				}
+			}
+		}
+		IF(ALL==1) {
+			o6q100
+			#INTRO_CHORD0
+			#INTRO_CHORD1
+		}
+		o5v100
+		SelVoice(SawtoothLead,SawtoothLead)
+		IF(ALL==1) {
+			#CHORD1
+		}
+		o6
+		#CHORD2
+
+		IF(ALL==1) {
+			SelVoice(SynthBrass1,SynthBrass1)
+			v127
+			IF(MA7==0) {
+				Sub {
+					o5q100
+					#INTRO_CHORD1
+				}
+			}
+			o6
+			#INTRO_CHORD1
+			o5v100
+			SelVoice(SawtoothLead,SawtoothLead)
+			#CHORD1
+			o6
+			#CHORD2
+			o6
+			v127
+			SelVoice(SynthBrass1,SynthBrass1)
+			IF(MA7==0) {
+				Sub {
+					o5
+					#CHORD3
+				}
+			}
+			o6
+			#CHORD3
+			o6
+			SelVoice(SawtoothLead,SawtoothLead)
+			v100
+			#CHORD2
+			#CHORD2
+			v127
+			SelVoice(SynthBrass1,SynthBrass1)
+			IF(MA7==0) {
+				Sub {
+					o5q100
+					#CHORD5
+				}
+			}
+			o6
+			#CHORD5
+			#CHORD51
+		}
+
+	トラック 4;
+		v120
+		EX(120)
+		SelVoice(Strings1,Strings1)
+		o5q100
+		IF(ALL==1) {
+			[17 r1]
+			#STRINGS1
+			[8 r1]
+			#STRINGS2
+		}
+		#CHORD2
+		IF(ALL==1) {
+			o5q100
+			[16 r1]
+			#STRINGS1
+			[8 r1]
+			#STRINGS2
+			#CHORD2
+
+			[18 r1]
+			#CHORD2
+			#CHORD2
+			#CHORD5
+		}
+
+	トラック 5;
+		v100
+		EX(127,90,!2)
+		SelVoice(SawtoothLead,SawtoothLead)
+		IF(ALL==1) {
+			o5q98
+			r1
+			#CHORD0
+			[16 r1]
+			o6q100
+			#SYNTH1
+		}
+		o5q98
+		#CHORD0
+
+		IF(ALL==1) {
+			#CHORD0
+			[16 r1]
+			o6q100
+			#SYNTH1
+			o5q98
+			#CHORD0
+
+			<
+			#CHORD4
+			o5q98
+			#CHORD0
+			#CHORD0
+			#CHORD6
+		}
+	トラック 6;
+		SelVoice(OverdrivenGuitar,OverdrivenGuitar)
+		o4q85
+		IF(ALL==1) {
+			r1
+			v110
+			EX(127,80,!8)
+			#INTRO_G0
+			#INTRO_G1
+			v100
+			EX(120,90,!4)
+			#G1
+		}
+		l8
+		#G2
+
+		IF(ALL==1) {
+			v110
+			EX(127,80,!8)
+			#INTRO_G1
+			v100
+			EX(120,90,!4)
+			#G1
+			#G2
+			#G3
+
+			#G2
+			#G2
+			#G4
+		}
+
+	トラック 7;
+		IF(ALL==1) {
+			v127
+			EX(127)
+			SelVoice(DistortionGuitar,DistortionGuitar)
+			o5q100
+			VBON(1)
+			#INTRO_GUITAR1
+			[48 r1]r4.
+			o5q100
+			#INTRO_GUITAR1
+			[102 r1]r4.
+			o5q100
+			#END_GUITAR1
+		}
+
+	トラック 9;
+		v127
+		o3q90
+		IF(ALL==1) {
+			r1
+			EX(115)
+			SelVoice(SlapBass1,SlapBass1)
+			#INTRO_BASS1
+			#BASS1
+		}
+		#BASS2
+
+		IF(ALL==1) {
+			#INTRO_BASS1
+			#BASS1
+			#BASS2
+			#BASS3
+			#BASS2
+			#BASS4
+		}
+
+	トラック 8;
+		v127
+		EX(115)
+		SelVoice(SlapBass1,SlapBass1)
+		o2q90
+		IF(ALL==1) {
+			r1
+			#INTRO_BASS1
+			#BASS1
+		}
+		#BASS2
+
+		IF(ALL==1) {
+			#INTRO_BASS1
+			#BASS1
+			#BASS2
+			#BASS3
+			#BASS2
+			#BASS4
+		}
+
+	トラック 10;
+		v127
+		Expression(127)
+		IF (MA7==0) { 
+			IF(TiMidiTy==1) {
+				音色(StandardSet)
+			} ELSE {
+				音色(PowerSet)
+			}
+		} ELSE {
+			音色(3,125,0)
+		}
+
+		$b{n(36),}		// 36
+		$k{n(37),}		// 37
+		IF(TiMidiTy==1) {
+			$s{n(38),}		// 38
+		} ELSE {
+			$s{n(40),}		// 38
+		}
+		$f{n(41),}		// 43->41
+		$l{n(43),}		// 43->41
+		$m{n(45),}		// 47->45
+		$t{n(50),}		// 50->50
+		//$r{n(51),}		// 53->51
+		$o{n(46),}		// 46
+		$h{n(42),}	// 42
+		$c{n(49),}	// 49
+		$q{n(57),}	// 75
+		$p{n(44),}
+
+		IF(ALL==1) {
+			Rythm {
+				s16s16r16m16
+				s16r16m16l16
+				f8f8s4
+
+				'b8h8c8'p8 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				'b8h8'p8 'sh8'p8 'bh8''bp8''sh8''bo8'
+				'b8h8'h8 'ch8's16s16 's16m16''s16m16' l16l16 's16m16''s16l16''s8l8'
+
+				'b8h8q8'p8 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'ch8's16l16 f8m16l16 f8s16s16
+				'b8qs8'o8 'b8h8'o8 'b8h8'o8 'b8h8's8
+				'b4s4''b4s4c4' l16l16l8 m16l16f8
+			}
+
+			Rythm {
+				'b4q4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''s4o4'r8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'so8't16t16 t8m8l16l16f8
+
+				'b4q4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8.'t16 t16m16l8 m16l16f8
+			}
+	#
+			Rythm {
+				'b4c4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''s4o4'r8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'h8'sh8't16t16 t8m8l16l16f8
+
+				'b4q4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''so4'
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''so4'
+				'bh8'p8'sh8'o8'b8h8't8t16m16l8
+				'bso8'p8'bso8'p8'bso8'p8'bso8'p8
+				'bsh8'p8'bso8'p8'bsh8'm8'bh8''st16'm16
+				'bs8'm16l16'bst8'l16f16'bst8't16m16l16l16f8
+			}
+		}
+		Rythm {
+			'b4c4''sh8'p8'b8h8'p8'sh8'p8
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'o8
+			'bh8'p8c8.t16 t8t8 t16m16l8
+
+			'b4q4''sh8'p8'b8h8'p8'sh8'p8
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+			'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+			'bh8'p8'sc8's16s16 s8t8 t16m16l8
+			'bc8'b4 s4 'so8'p8 b8
+		}
+		IF(ALL==1) {
+			Rythm {
+				'bsh4''bsh4' t8t8 t16m16'ql8'
+			}
+		} ELSE {
+			Rythm {
+				'bsh4''bsh4' t8t8 t16m16'l8'
+			}
+		}
+		IF(ALL==1) {
+			Rythm {
+				'b8h8'p8 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				'b8h8'p8 'sh8'p8 'bh8''bp8''sh8''bo8'
+				'b8h8'h8 'ch8's16s16 's16m16''s16m16' l16l16 's16m16''s16l16''s8l8'
+
+				'b8h8q8'p8 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'ch8's16l16 f8m16l16 f8s16s16
+				'b8qs8'o8 'b8h8'o8 'b8h8'o8 'b8h8's8
+				'b4s4''b4s4c4' l16l16l8 m16l16f8
+			}
+
+			Rythm {
+				'b4c4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''s4o4'r8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'so8't16t16 t8m8l16l16f8
+
+				'b4c4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8.'t16 t16m16l8 m16l16f8
+
+				'b4c4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''s4o4'r8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'h8'sh8't16t16 t8m8l16l16f8
+
+				'b4c4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''so4'
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''so4'
+				'bh8'p8'sh8'o8'b8h8't8t16m16l8
+				'bso8'p8'bso8'p8'bso8'p8'bso8'p8
+				'bsh8'p8'bso8'p8'bsh8'm8'bh8''st16'm16
+				'bs8'm16l16'bst8'l16f16'bst8't16m16l16l16f8
+			}
+
+
+			Rythm {
+				'b4c4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'o8
+				'bh8'p8'sc8.'t16 t8t8 t16m16l8
+
+				'b4c4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sc8's16s16 s8t8 t16m16l8
+				'bc8'b4 s4 'so8'p8 b8
+				'bsh4''bsh4' t8t8 t16m16'cl8'
+			}
+
+			Rythm {
+				'bo8'p8'sh8'p8'b8h8''b8o8''sh8'h8
+				'bo8'p8'so8'p8'b8h8''b8o8''sh8'o8
+				'bh8'p8'so8'p8'b8h8''b8o8''sh8'o8
+				'bh8'p8'so8'p8'b8h8''b8o8''sh8'o8
+
+				'bh8'p8'so8'p8'b8h8''b8o8''sh8'o8
+				'bh8'p8'so8'p8'b8h8''b8o8''sh8'c8
+				'bh8''bh8''bo8''bo8' 'bt8''b8''bt8''bm8'
+				'bm8'l8'bmo8'l8 'bl8''mq8'l8'fc8'
+
+				'bh8'p8'so8'p8'b8h8''b8o8''sh8'o8
+				'bh8'p8'so8'p8'b8h8''b8o8''sh8'o8
+				'bh8'p8'so8'p8'b8h8''b8o8''sh8'm8
+				'bh8'p8'th8'o8'b8hs8''b8o8''sh8'c8
+
+				'bh8' p8 'sh8' 'qp8'  'bh8' p8  'sh8' c8
+				'bh8' p8 'sh8' 'qt16't16  'bht16't16 m16m16 'bl16'l16 f16f16 
+				'bhc8''bp8''bso8''bp8' 'bsh8'o8'bh8''so8'
+				'bo8''bp8''bsq8''bp8' 'bsh8'o8'bsh8''o8'
+				'bo8''bp8''bto16't16 t16t16 'bm16'm16m16m16 'bl16'l16'bsol8'
+				r8'bsh8''bsh8's8 'st16'm16l16f16'bsc4'
+			}
+
+			Rythm {
+				'b4q4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'o8
+				'bh8'p8c8.t16 t8t8 t16m16l8
+
+				'b4q4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sc8's16s16 s8t8 t16m16l8
+				'bq8'b4 s4 'so8'p8 b8
+				'bsh4''bsh4' t8t8 t16m16'ql8'
+			}
+
+			Rythm {
+				'bh8'p8'sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'o8
+				'bh8'p8c8.t16 t8t8 t16m16l8
+
+				'b4q4''sh8'p8'b8h8'p8'sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+
+				'bh8'p8'sh8'p8'b8h8''b8p8''sh8'p8
+				'bh8'p8'sc8's16s16 s8t8 t16m16l8
+				'bq8'b4 s4 'so8'p8 b8
+				'bsh4''bsh4' t8t8 t16m16'l8'
+				'bo8'b4 s4 'so8'p8 b8
+				'bsh4''bsh4' t8t8 t16m16'l8'
+				'bo8'b4 s4 'so8'p8 b8
+				'bsh4''bsh4' t16t16t16t16 t16m16'cl8'
+			}
+
+			Rythm {
+				'b8h8'p8 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+
+				h8'b8p8' 'sh8'p8 'bh8''bp8''sh8''bp8'
+				'b8h8'p8 'ch8's16s16 's16m16''s16m16' l16l16 's16m16''s16l16''s8l8'
+
+				'bc4' b4 'bs8'b8 'bt16't16m8
+				'bm4' 'bsq8' t16t16 m8'om8' 'hl8'f8
+				'bc4' b4 'bs8'b8 'bt16't16m8
+				'bm4' 'bsq8'r8 b8s8 'bm16'm16l8
+
+				'bsh8'r8r8 'bsh8'r8r8 'bsh8'r8
+				r8'bsh8'r8r8 'bsh8'r8 'bsh8'r8
+
+				t32m32l32f32r8 'bsh8''bsh8'
+			}
+		}
+}
